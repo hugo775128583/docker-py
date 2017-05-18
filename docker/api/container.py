@@ -417,6 +417,8 @@ class ContainerApiMixin(object):
                 Default: 10
             networking_config (dict): A networking configuration generated
                 by :py:meth:`create_networking_config`.
+            healthcheck (dict): Specify a test to perform to check that the
+                container is healthy.
 
         Returns:
             A dictionary with an image 'Id' key and a 'Warnings' key.
