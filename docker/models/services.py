@@ -230,6 +230,13 @@ CREATE_SERVICE_KWARGS = [
     'endpoint_spec',
 ]
 
+# kwargs to copy straight over to Placement
+PLACEMENT_KWARGS = [
+    'constraints',
+    'preferences',
+    'platforms',
+]
+
 
 def _get_create_service_kwargs(func_name, kwargs):
     # Copy over things which can be copied directly
@@ -245,14 +252,16 @@ def _get_create_service_kwargs(func_name, kwargs):
     for key in copy.copy(kwargs):
         if key in TASK_TEMPLATE_KWARGS:
             task_template_kwargs[key] = kwargs.pop(key)
+    placement_kwargs = {}
+    for key in copy.copy(kwargs):
+        if key in PLACEMENT_KWARGS:
+            placement_kwargs[key] = kwargs.pop(key)
 
     if 'container_labels' in kwargs:
         container_spec_kwargs['labels'] = kwargs.pop('container_labels')
 
-    if 'constraints' in kwargs:
-        task_template_kwargs['placement'] = {
-            'Constraints': kwargs.pop('constraints')
-        }
+    if placement_kwargs:
+        task_template_kwargs['placement'] = placement_kwargs
 
     if 'log_driver' in kwargs:
         task_template_kwargs['log_driver'] = {
